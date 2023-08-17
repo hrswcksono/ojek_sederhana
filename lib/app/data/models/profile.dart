@@ -1,9 +1,9 @@
 class Profile {
-  final int id;
-  final String name;
-  final String password;
-  final String image;
-  final int nik;
+  int id;
+  String name;
+  String password;
+  String image;
+  int nik;
 
   Profile(
       {required this.id,
@@ -11,4 +11,14 @@ class Profile {
       required this.password,
       required this.image,
       required this.nik});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'password': password,
+      'image': image,
+      'nik': nik,
+    };
+  }
 }

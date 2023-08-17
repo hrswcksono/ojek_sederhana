@@ -21,6 +21,7 @@ class TextFieldSendGoods extends StatelessWidget {
             width: Get.width * 0.3,
             child: TextField(
               controller: textEdt,
+              textAlign: TextAlign.center,
             )),
       ],
     );

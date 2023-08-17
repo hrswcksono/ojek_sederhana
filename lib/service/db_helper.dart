@@ -1,3 +1,4 @@
+import 'package:gojek_sederhana/app/data/models/profile.dart';
 import 'package:gojek_sederhana/app/data/models/send_good.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -35,6 +36,31 @@ class DBHelper {
     await db.execute('''
           CREATE TABLE profile(id INTEGER PRIMARY KEY, name TEXT, password TEXT, image TEXT, nik INT)
           ''');
+  }
+
+  Future<int> insertProfile(Profile data) async {
+    Database db = await instance.database;
+    var res = await db.insert(
+      'profile',
+      data.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    return res;
+  }
+
+  Future<int> editProfile(Profile data) async {
+    Database db = await instance.database;
+    var res = await db.rawUpdate(
+      'UPDATE profile SET name = ?, password = ?, image = ?, nik = ? WHERE id =?',
+      [data.name, data.password, data.image, data.nik, data.id],
+    );
+    return res;
+  }
+
+  Future<List<Map<String, dynamic>>> getUser() async {
+    Database db = await instance.database;
+    var res = await db.query('profile', orderBy: "id DESC");
+    return res;
   }
 
   Future<int> insert(SendGood sg) async {

@@ -20,53 +20,7 @@ class SendGoodsView extends GetView<SendGoodsController> {
         child: Column(
           children: [
             InkWell(
-              onTap: () => {
-                Get.dialog(Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        height: 100,
-                        width: Get.width * 0.8,
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                                color: CustomColor.mainGreen,
-                                width: 1.5,
-                                style: BorderStyle.solid),
-                            // color: Colors.white,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  controller.addImage('c');
-                                },
-                                icon: const Icon(
-                                  Icons.camera_alt,
-                                  size: 35,
-                                )),
-                            VerticalDivider(
-                              color: CustomColor.mainGreen,
-                              thickness: 2,
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  controller.addImage('g');
-                                },
-                                icon: const Icon(
-                                  Icons.filter_sharp,
-                                  size: 35,
-                                ))
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ))
-              },
+              onTap: () => {Get.dialog(pickImageGood())},
               child: Container(
                 height: 200,
                 width: double.infinity,
@@ -94,6 +48,9 @@ class SendGoodsView extends GetView<SendGoodsController> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             const Text('Titik Driver'),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,6 +60,9 @@ class SendGoodsView extends GetView<SendGoodsController> {
                 TextFieldSendGoods(
                     title: 'longitude', textEdt: controller.longDriver),
               ],
+            ),
+            const SizedBox(
+              height: 10,
             ),
             const Text('Titik Kantor'),
             Row(
@@ -114,24 +74,79 @@ class SendGoodsView extends GetView<SendGoodsController> {
                     title: 'longitude', textEdt: controller.longOffice),
               ],
             ),
-            ElevatedButton(
-                onPressed: () {
-                  controller.getData();
-                },
-                child: const Text('Cek Jarak')),
-            ElevatedButton(
-                onPressed: () {
-                  controller.addData();
-                },
-                child: const Text('Kirim')),
-            ElevatedButton(
-                onPressed: () {
-                  controller.clearTable();
-                },
-                child: const Text('ClearTable'))
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: Get.width * 0.35,
+              child: ElevatedButton(
+                  onPressed: () {
+                    controller.getData();
+                  },
+                  child: const Text('Cek Jarak')),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: Get.width * 0.35,
+              child: ElevatedButton(
+                  onPressed: () {
+                    controller.addData();
+                  },
+                  child: const Text('Kirim')),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Column pickImageGood() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: Container(
+            height: 100,
+            width: Get.width * 0.8,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                    color: CustomColor.mainGreen,
+                    width: 1.5,
+                    style: BorderStyle.solid),
+                // color: Colors.white,
+                borderRadius: BorderRadius.circular(10)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      controller.addImage('c');
+                    },
+                    icon: const Icon(
+                      Icons.camera_alt,
+                      size: 35,
+                    )),
+                VerticalDivider(
+                  color: CustomColor.mainGreen,
+                  thickness: 2,
+                ),
+                IconButton(
+                    onPressed: () {
+                      controller.addImage('g');
+                    },
+                    icon: const Icon(
+                      Icons.filter_sharp,
+                      size: 35,
+                    ))
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }

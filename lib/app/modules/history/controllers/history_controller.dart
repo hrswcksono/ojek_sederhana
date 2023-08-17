@@ -26,6 +26,10 @@ class HistoryController extends GetxController with StateMixin<List<SendGood>> {
             date: element['date']));
       }
     });
-    change(sendgooddata, status: RxStatus.success());
+    if (sendgooddata.isEmpty) {
+      change(null, status: RxStatus.empty());
+    } else {
+      change(sendgooddata, status: RxStatus.success());
+    }
   }
 }

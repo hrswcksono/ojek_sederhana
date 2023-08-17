@@ -16,8 +16,8 @@ class BaseView extends GetView<BaseController> {
         builder: (ctx) => Scaffold(
               body: IndexedStack(
                 index: ctx.tabIndex,
-                children: const [
-                  HomeView(),
+                children: [
+                  const HomeView(),
                   ProfileView(),
                 ],
               ),
@@ -52,7 +52,7 @@ class BaseView extends GetView<BaseController> {
                       label: 'Home',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.account_circle_outlined),
+                      icon: Icon(Icons.account_circle),
                       label: 'Profile',
                     )
                   ],

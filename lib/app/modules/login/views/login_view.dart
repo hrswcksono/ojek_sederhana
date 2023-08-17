@@ -16,15 +16,17 @@ class LoginView extends GetView<LoginController> {
           child: Column(
             children: [
               const Spacer(),
-              const TextField(
+              TextField(
+                controller: controller.nama,
                 decoration: InputDecoration(
-                  hintText: 'Username',
+                  hintText: 'Name',
                 ),
               ),
               const SizedBox(
                 height: 15,
               ),
-              const TextField(
+              TextField(
+                controller: controller.password,
                 decoration: InputDecoration(
                   hintText: 'Password',
                 ),
@@ -33,7 +35,9 @@ class LoginView extends GetView<LoginController> {
                 height: 15,
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  controller.login();
+                },
                 child: const Text('Login'),
               ),
               const Spacer()

@@ -38,7 +38,8 @@ class SendGoodsController extends GetxController {
       }
       update();
     } else if (label == "c") {
-      var pickImage = await _picker.pickImage(source: ImageSource.camera);
+      var pickImage = await _picker.pickImage(
+          source: ImageSource.camera, maxWidth: 200, maxHeight: 200);
       if (pickImage != null) {
         imageGoods = File(pickImage.path);
       }

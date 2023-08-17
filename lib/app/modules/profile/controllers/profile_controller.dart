@@ -1,23 +1,85 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gojek_sederhana/app/data/models/profile.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
+import '../../../../service/db_helper.dart';
 
-  final count = 0.obs;
+class ProfileController extends GetxController with StateMixin<Profile> {
+  late TextEditingController namaTf;
+  late TextEditingController nikTf;
+
+  late TextEditingController passTf;
+  late TextEditingController confPassTf;
+
+  File? imageProfile;
+  final ImagePicker _picker = ImagePicker();
+
   @override
   void onInit() {
+    namaTf = TextEditingController();
+    nikTf = TextEditingController();
+    passTf = TextEditingController();
+    confPassTf = TextEditingController();
+    initData();
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void initData() async {
+    var data = await DBHelper.instance.getUser();
+
+    var dataProfile = Profile(
+        id: data[0]['id'],
+        name: data[0]['name'],
+        password: data[0]['password'],
+        image: data[0]['image'],
+        nik: data[0]['nik']);
+
+    change(dataProfile, status: RxStatus.success());
   }
 
-  @override
-  void onClose() {
-    super.onClose();
+  void editProfile(Profile data) async {
+    data.name = namaTf.text;
+    data.nik = int.parse(nikTf.text);
+    await DBHelper.instance.editProfile(data);
+    namaTf.clear();
+    nikTf.clear();
+    initData();
+    Get.back();
   }
 
-  void increment() => count.value++;
+  void editPassword(Profile data) async {
+    if (passTf.text == confPassTf.text) {
+      data.password = passTf.text;
+      await DBHelper.instance.editProfile(data);
+      passTf.clear();
+      confPassTf.clear();
+      Get.back();
+    } else {}
+  }
+
+  void editImage(Profile data) async {
+    data.image = namaTf.text;
+    await DBHelper.instance.editProfile(data);
+  }
+
+  addImage(String label) async {
+    if (label == "g") {
+      var pickImage = await _picker.pickImage(
+          source: ImageSource.gallery, maxWidth: 200, maxHeight: 200);
+      if (pickImage != null) {
+        imageProfile = File(pickImage.path);
+      }
+      update();
+    } else if (label == "c") {
+      var pickImage = await _picker.pickImage(
+          source: ImageSource.camera, maxWidth: 200, maxHeight: 200);
+      if (pickImage != null) {
+        imageProfile = File(pickImage.path);
+      }
+      update();
+    }
+  }
 }
