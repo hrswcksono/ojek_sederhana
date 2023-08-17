@@ -19,11 +19,37 @@ class HistoryView extends GetView<HistoryController> {
       ),
       body: Column(
         children: [
-          TableCalendar(
-            firstDay: DateTime.utc(2010, 10, 16),
-            lastDay: DateTime.utc(2030, 3, 14),
-            focusedDay: DateTime.now(),
-          ),
+          GetBuilder<HistoryController>(
+              init: HistoryController(),
+              builder: (ctx) {
+                return TableCalendar(
+                  firstDay: DateTime.utc(2010, 10, 16),
+                  lastDay: DateTime.utc(2030, 3, 14),
+                  focusedDay: controller.focusedDay,
+                  calendarFormat: controller.calendarFormat,
+                  selectedDayPredicate: (day) {
+                    return isSameDay(controller.selectedDay, day);
+                  },
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (!isSameDay(controller.selectedDay, selectedDay)) {
+                      controller.selectedDay = selectedDay;
+                      controller.focusedDay = focusedDay;
+                      print(selectedDay);
+                      controller.update();
+                    }
+                  },
+                  onFormatChanged: (format) {
+                    if (controller.calendarFormat != format) {
+                      controller.calendarFormat = format;
+                      controller.update();
+                    }
+                  },
+                  onPageChanged: (focusedDay) {
+                    controller.focusedDay = focusedDay;
+                    controller.update();
+                  },
+                );
+              }),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),

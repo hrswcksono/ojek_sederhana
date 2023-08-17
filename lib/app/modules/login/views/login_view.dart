@@ -18,7 +18,7 @@ class LoginView extends GetView<LoginController> {
               const Spacer(),
               TextField(
                 controller: controller.nama,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Name',
                 ),
               ),
@@ -27,7 +27,7 @@ class LoginView extends GetView<LoginController> {
               ),
               TextField(
                 controller: controller.password,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Password',
                 ),
               ),

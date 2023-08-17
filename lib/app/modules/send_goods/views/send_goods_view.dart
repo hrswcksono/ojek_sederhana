@@ -77,11 +77,19 @@ class SendGoodsView extends GetView<SendGoodsController> {
             const SizedBox(
               height: 10,
             ),
+            GetBuilder<SendGoodsController>(
+                init: SendGoodsController(),
+                builder: (ctx) {
+                  return Text('${ctx.distancets} km');
+                }),
+            const SizedBox(
+              height: 10,
+            ),
             SizedBox(
               width: Get.width * 0.35,
               child: ElevatedButton(
                   onPressed: () {
-                    controller.getData();
+                    controller.showDistance();
                   },
                   child: const Text('Cek Jarak')),
             ),
@@ -124,6 +132,7 @@ class SendGoodsView extends GetView<SendGoodsController> {
               children: [
                 IconButton(
                     onPressed: () {
+                      Get.back();
                       controller.addImage('c');
                     },
                     icon: const Icon(
@@ -136,6 +145,7 @@ class SendGoodsView extends GetView<SendGoodsController> {
                 ),
                 IconButton(
                     onPressed: () {
+                      Get.back();
                       controller.addImage('g');
                     },
                     icon: const Icon(

@@ -1,10 +1,15 @@
 import 'package:get/get.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../service/db_helper.dart';
 import '../../../data/models/send_good.dart';
 
 class HistoryController extends GetxController with StateMixin<List<SendGood>> {
   var sendgooddata = List<SendGood>.empty(growable: true);
+
+  var focusedDay = DateTime.now();
+  var calendarFormat = CalendarFormat.twoWeeks;
+  var selectedDay = DateTime.now();
 
   @override
   void onInit() {

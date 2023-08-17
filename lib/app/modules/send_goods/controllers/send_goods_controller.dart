@@ -15,7 +15,13 @@ class SendGoodsController extends GetxController {
   late TextEditingController latOffice;
   late TextEditingController longOffice;
 
+  var distance = const Distance();
+
+  var distancets = 0.0;
+
   var sendgooddata = List<SendGood>.empty(growable: true);
+
+  bool isShowDistance = false;
 
   File? imageGoods;
   final ImagePicker _picker = ImagePicker();
@@ -51,32 +57,32 @@ class SendGoodsController extends GetxController {
     // convert image into file object
 
     // Read bytes from the file object
-    Uint8List _bytes = await imageFile.readAsBytes();
+    Uint8List bytes = await imageFile.readAsBytes();
 
     // base64 encode the bytes
-    String _base64String = base64.encode(_bytes);
+    String base64String = base64.encode(bytes);
 
-    return _base64String;
+    return base64String;
   }
 
-  void getData() {
-    DBHelper.instance.getList().then((value) {
-      value.forEach((element) {
-        print(element);
-      });
-    });
+  void showDistance() {
+    distancets = distance.as(
+        LengthUnit.Kilometer,
+        LatLng(double.parse(latDriver.text), double.parse(longDriver.text)),
+        LatLng(double.parse(latOffice.text), double.parse(longOffice.text)));
+    isShowDistance = true;
+    update();
   }
 
   void addData() async {
     var imageInput = await imageToBase64(imageGoods!);
-    var distance = const Distance();
 
     var lengthData = 0;
     await DBHelper.instance.getList().then((value) {
       lengthData = value.length;
     });
 
-    final distancets = distance.as(
+    distancets = distance.as(
         LengthUnit.Kilometer,
         LatLng(double.parse(latDriver.text), double.parse(longDriver.text)),
         LatLng(double.parse(latOffice.text), double.parse(longOffice.text)));
@@ -93,7 +99,6 @@ class SendGoodsController extends GetxController {
     );
 
     await DBHelper.instance.insert(data);
-    sendgooddata.insert(0, data);
   }
 
   void deleteTable() async {

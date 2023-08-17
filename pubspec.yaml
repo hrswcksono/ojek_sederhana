@@ -6,6 +6,7 @@ environment:
   sdk: '>=3.0.5 <4.0.0'
 
 dependencies:
+  art_sweetalert: ^0.0.5
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter

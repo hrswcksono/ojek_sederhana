@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:gojek_sederhana/app/routes/app_pages.dart';
 import 'package:gojek_sederhana/utils/themes/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,22 +32,39 @@ class ProfileView extends GetView<ProfileController> {
                     ),
                     Stack(
                       children: [
-                        Container(
-                          width: Get.width / 2.5,
-                          height: Get.width / 2.5,
-                          // child: Icon(CustomIcons.option, size: 20,),
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color(0xFFe0f2f1),
-                          ),
-                          child: Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png'),
-                        ),
+                        // ignore: unnecessary_null_comparison
+                        state!.image == null
+                            ? Container(
+                                width: Get.width / 2.5,
+                                height: Get.width / 2.5,
+                                // child: Icon(CustomIcons.option, size: 20,),
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png'),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                width: Get.width / 2.5,
+                                height: Get.width / 2.5,
+                                // child: Icon(CustomIcons.option, size: 20,),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: MemoryImage(base64
+                                        .decode(state.image.split(',').last)),
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ),
                         Positioned(
                           bottom: 10,
                           right: 10,
                           child: InkWell(
-                            onTap: () => Get.dialog(editImage()),
+                            onTap: () => Get.dialog(editImage(state)),
                             child: Container(
                               width: 30,
                               height: 30,
@@ -66,7 +86,7 @@ class ProfileView extends GetView<ProfileController> {
                       height: 15,
                     ),
                     Text(
-                      'Nama : ${state!.name}',
+                      'Nama : ${state.name}',
                       style: GoogleFonts.poppins(fontSize: 20),
                     ),
                     const SizedBox(
@@ -113,7 +133,15 @@ class ProfileView extends GetView<ProfileController> {
                           ),
                         ),
                       ],
-                    )
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          Get.offAllNamed(Routes.LOGIN);
+                        },
+                        child: Text('Keluar'))
                   ],
                 )),
           ),
@@ -122,7 +150,7 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
-  Column editImage() {
+  Column editImage(Profile data) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -145,67 +173,95 @@ class ProfileView extends GetView<ProfileController> {
                     fontSize: 20,
                   ),
                 ),
-                Container(
-                  width: Get.width / 2.5,
-                  height: Get.width / 2.5,
-                  // child: Icon(CustomIcons.option, size: 20,),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFe0f2f1),
-                  ),
-                  child: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png'),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      Get.dialog(Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Material(
-                            color: Colors.transparent,
-                            child: Container(
-                              height: 100,
-                              width: Get.width * 0.8,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: CustomColor.mainGreen,
-                                      width: 1.5,
-                                      style: BorderStyle.solid),
-                                  // color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  IconButton(
-                                      onPressed: () {
-                                        // controller.addImage('c');
-                                      },
-                                      icon: const Icon(
-                                        Icons.camera_alt,
-                                        size: 35,
-                                      )),
-                                  VerticalDivider(
-                                    color: CustomColor.mainGreen,
-                                    thickness: 2,
-                                  ),
-                                  IconButton(
-                                      onPressed: () {
-                                        // controller.addImage('g');
-                                      },
-                                      icon: const Icon(
-                                        Icons.filter_sharp,
-                                        size: 35,
-                                      ))
-                                ],
-                              ),
-                            ),
+                GetBuilder<ProfileController>(
+                  init: ProfileController(),
+                  builder: (ctx) {
+                    return ctx.imageProfile == null
+                        ? Container(
+                            width: Get.width / 2.5,
+                            height: Get.width / 2.5,
+                            // child: Icon(CustomIcons.option, size: 20,),
+                            decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: NetworkImage(
+                                        'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/2048px-Circle-icons-profile.svg.png'))),
                           )
-                        ],
-                      ));
-                    },
-                    child: const Text("Ambil Gambar"))
+                        : Container(
+                            width: Get.width / 2.5,
+                            height: Get.width / 2.5,
+                            // child: Icon(CustomIcons.option, size: 20,),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                    image: FileImage(ctx.imageProfile!))),
+                          );
+                  },
+                ),
+                GetBuilder<ProfileController>(
+                  init: ProfileController(),
+                  builder: (ctx) {
+                    return ctx.imageProfile == null
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Get.dialog(Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: Container(
+                                      height: 100,
+                                      width: Get.width * 0.8,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: CustomColor.mainGreen,
+                                              width: 1.5,
+                                              style: BorderStyle.solid),
+                                          // color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          IconButton(
+                                              onPressed: () {
+                                                Get.back();
+                                                profileC.addImage('c');
+                                              },
+                                              icon: const Icon(
+                                                Icons.camera_alt,
+                                                size: 35,
+                                              )),
+                                          VerticalDivider(
+                                            color: CustomColor.mainGreen,
+                                            thickness: 2,
+                                          ),
+                                          IconButton(
+                                              onPressed: () {
+                                                Get.back();
+                                                profileC.addImage('g');
+                                              },
+                                              icon: const Icon(
+                                                Icons.filter_sharp,
+                                                size: 35,
+                                              ))
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ));
+                            },
+                            child: const Text("Ambil Gambar"))
+                        : ElevatedButton(
+                            onPressed: () {
+                              ctx.editImage(data);
+                            },
+                            child: const Text('Selesai'));
+                  },
+                ),
               ],
             ),
           ),

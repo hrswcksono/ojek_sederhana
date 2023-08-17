@@ -4,10 +4,10 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBHelper {
-  static final _databaseName = "gojek_sederhana.db";
-  static final _databaseVersion = 1;
+  static const _databaseName = "gojek_sederhana.db";
+  static const _databaseVersion = 1;
 
-  static final table = "sendgood";
+  static const table = "sendgood";
 
   // static final columnId = 'id';
   // static final columnTitle = 'title';

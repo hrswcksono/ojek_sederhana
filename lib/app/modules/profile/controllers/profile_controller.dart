@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,8 +63,22 @@ class ProfileController extends GetxController with StateMixin<Profile> {
   }
 
   void editImage(Profile data) async {
-    data.image = namaTf.text;
+    var imageInput = await imageToBase64(imageProfile!);
+    data.image = imageInput;
     await DBHelper.instance.editProfile(data);
+    initData();
+    imageProfile = null;
+    Get.back();
+    update();
+  }
+
+  Future<String> imageToBase64(File imageFile) async {
+    // convert image into file object
+    // Read bytes from the file object
+    Uint8List bytes = await imageFile.readAsBytes();
+    // base64 encode the bytes
+    String base64String = base64.encode(bytes);
+    return base64String;
   }
 
   addImage(String label) async {
