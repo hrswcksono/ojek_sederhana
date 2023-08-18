@@ -3,7 +3,7 @@ class Profile {
   String name;
   String password;
   String image;
-  int nik;
+  String nik;
 
   Profile(
       {required this.id,

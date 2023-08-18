@@ -6,7 +6,7 @@ import 'package:gojek_sederhana/app/data/models/send_good.dart';
 import '../../../../../utils/themes/colors.dart';
 
 class ItemHistoryKirim extends StatelessWidget {
-  ItemHistoryKirim({
+  const ItemHistoryKirim({
     super.key,
     required this.item,
   });
@@ -57,7 +57,7 @@ class ItemHistoryKirim extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('${item.distance} km'),
-                    Text(item.date.substring(0, 10)),
+                    Text(item.date),
                   ],
                 ),
               ),

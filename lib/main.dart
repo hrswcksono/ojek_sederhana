@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app/routes/app_pages.dart';
+import 'service/storage_service.dart';
 import 'utils/themes/colors.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(MyApp());
+  Get.lazyPut(() => StorageService());
+  await initialConfig();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -66,4 +68,8 @@ class MyApp extends StatelessWidget {
           )),
     );
   }
+}
+
+Future<void> initialConfig() async {
+  await Get.putAsync(() => StorageService().init());
 }

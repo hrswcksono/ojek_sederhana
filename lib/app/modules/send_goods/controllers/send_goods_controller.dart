@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gojek_sederhana/app/data/models/send_good.dart';
 import 'package:gojek_sederhana/service/db_helper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 class SendGoodsController extends GetxController {
@@ -20,8 +22,6 @@ class SendGoodsController extends GetxController {
   var distancets = 0.0;
 
   var sendgooddata = List<SendGood>.empty(growable: true);
-
-  bool isShowDistance = false;
 
   File? imageGoods;
   final ImagePicker _picker = ImagePicker();
@@ -54,30 +54,93 @@ class SendGoodsController extends GetxController {
   }
 
   Future<String> imageToBase64(File imageFile) async {
-    // convert image into file object
-
-    // Read bytes from the file object
     Uint8List bytes = await imageFile.readAsBytes();
-
-    // base64 encode the bytes
     String base64String = base64.encode(bytes);
-
     return base64String;
   }
 
+  bool isNumeric(String s) {
+    // ignore: unnecessary_null_comparison
+    if (s == null) {
+      return false;
+    }
+    return double.tryParse(s) != null;
+  }
+
+  bool checkIsNumber() {
+    if (isNumeric(latDriver.text) &&
+        isNumeric(longDriver.text) &&
+        isNumeric(latOffice.text) &&
+        isNumeric(longOffice.text)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void verifDistance() {
+    if (!checkIsNumber()) {
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.danger,
+          title: "Error",
+          text: "Masukkan hanya angka",
+        ),
+      );
+      return;
+    }
+  }
+
   void showDistance() {
+    if (latDriver.text.isEmpty ||
+        longDriver.text.isEmpty ||
+        latOffice.text.isEmpty ||
+        longOffice.text.isEmpty) {
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.danger,
+          title: "Error",
+          text: "Lengkapi longitude latitude",
+        ),
+      );
+      return;
+    }
+    verifDistance();
     distancets = distance.as(
         LengthUnit.Kilometer,
         LatLng(double.parse(latDriver.text), double.parse(longDriver.text)),
         LatLng(double.parse(latOffice.text), double.parse(longOffice.text)));
-    isShowDistance = true;
     update();
   }
 
+  void refreshData() {
+    Get.back();
+  }
+
   void addData() async {
+    if (imageGoods == null ||
+        latDriver.text.isEmpty ||
+        longDriver.text.isEmpty ||
+        latOffice.text.isEmpty ||
+        longOffice.text.isEmpty) {
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.danger,
+          title: "Error",
+          text: "Tidak bolah ada yang kosong",
+        ),
+      );
+      return;
+    }
+
+    verifDistance();
     var imageInput = await imageToBase64(imageGoods!);
 
     var lengthData = 0;
+
     await DBHelper.instance.getList().then((value) {
       lengthData = value.length;
     });
@@ -95,17 +158,22 @@ class SendGoodsController extends GetxController {
       longOffice: double.parse(longOffice.text),
       distance: distancets,
       image: imageInput,
-      date: DateTime.now().toString(),
+      date: getDate(DateTime.now()),
     );
 
     await DBHelper.instance.insert(data);
+    refreshData();
+    ArtSweetAlert.show(
+      context: Get.context!,
+      artDialogArgs: ArtDialogArgs(
+        type: ArtSweetAlertType.success,
+        title: "Success",
+        text: "Sedang mengirim barang",
+      ),
+    );
   }
 
-  void deleteTable() async {
-    await DBHelper.instance.delete(5);
-  }
-
-  void clearTable() async {
-    await DBHelper.instance.clearTable();
+  String getDate(DateTime input) {
+    return DateFormat("dd-MM-yyyy").format(input);
   }
 }

@@ -7,9 +7,11 @@ import 'package:gojek_sederhana/app/routes/app_pages.dart';
 import 'package:gojek_sederhana/utils/themes/colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../utils/helpers/helpers.dart';
 import '../../../data/models/profile.dart';
 import '../controllers/profile_controller.dart';
 
+// ignore: must_be_immutable
 class ProfileView extends GetView<ProfileController> {
   ProfileView({Key? key}) : super(key: key);
 
@@ -33,7 +35,7 @@ class ProfileView extends GetView<ProfileController> {
                     Stack(
                       children: [
                         // ignore: unnecessary_null_comparison
-                        state!.image == null
+                        state!.image == ''
                             ? Container(
                                 width: Get.width / 2.5,
                                 height: Get.width / 2.5,
@@ -134,14 +136,14 @@ class ProfileView extends GetView<ProfileController> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     ElevatedButton(
                         onPressed: () {
-                          Get.offAllNamed(Routes.LOGIN);
+                          profileC.logout();
                         },
-                        child: Text('Keluar'))
+                        child: const Text('Keluar'))
                   ],
                 )),
           ),

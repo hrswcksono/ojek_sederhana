@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:gojek_sederhana/app/middlewares/login_middlewares.dart';
 
 import '../modules/base/bindings/base_binding.dart';
 import '../modules/base/views/base_view.dart';
@@ -43,6 +44,7 @@ class AppPages {
       name: _Paths.LOGIN,
       page: () => const LoginView(),
       binding: LoginBinding(),
+      middlewares: [LoginMiddleware()],
     ),
     GetPage(
       name: _Paths.BASE,

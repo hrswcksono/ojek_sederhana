@@ -1,3 +1,4 @@
+import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -14,12 +15,17 @@ class BaseView extends GetView<BaseController> {
     return GetBuilder<BaseController>(
         init: BaseController(),
         builder: (ctx) => Scaffold(
-              body: IndexedStack(
-                index: ctx.tabIndex,
-                children: [
-                  const HomeView(),
-                  ProfileView(),
-                ],
+              body: DoubleBackToCloseApp(
+                snackBar: const SnackBar(
+                  content: Text("Tekan sekali lagi untuk keluar"),
+                ),
+                child: IndexedStack(
+                  index: ctx.tabIndex,
+                  children: [
+                    const HomeView(),
+                    ProfileView(),
+                  ],
+                ),
               ),
               bottomNavigationBar: Container(
                 height: Get.height * 0.08,
@@ -39,7 +45,7 @@ class BaseView extends GetView<BaseController> {
                   selectedIconTheme:
                       IconThemeData(color: CustomColor.mainGreen, size: 22),
                   selectedItemColor: CustomColor.mainGreen,
-                  selectedLabelStyle: TextStyle(
+                  selectedLabelStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                   mouseCursor: SystemMouseCursors.grab,

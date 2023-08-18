@@ -34,7 +34,7 @@ class HistoryView extends GetView<HistoryController> {
                     if (!isSameDay(controller.selectedDay, selectedDay)) {
                       controller.selectedDay = selectedDay;
                       controller.focusedDay = focusedDay;
-                      print(selectedDay);
+                      controller.filterList(selectedDay);
                       controller.update();
                     }
                   },

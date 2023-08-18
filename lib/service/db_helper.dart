@@ -34,7 +34,7 @@ class DBHelper {
           ''');
 
     await db.execute('''
-          CREATE TABLE profile(id INTEGER PRIMARY KEY, name TEXT, password TEXT, image TEXT, nik INT)
+          CREATE TABLE profile(id INTEGER PRIMARY KEY, name TEXT, password TEXT, image TEXT, nik TEXT)
           ''');
   }
 

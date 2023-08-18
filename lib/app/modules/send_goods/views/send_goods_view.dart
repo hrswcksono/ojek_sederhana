@@ -34,7 +34,7 @@ class SendGoodsView extends GetView<SendGoodsController> {
                 child: GetBuilder<SendGoodsController>(
                   init: SendGoodsController(),
                   builder: (ctx) {
-                    return ctx.imageGoods == null
+                    return (ctx.imageGoods == null)
                         ? Icon(
                             Icons.image,
                             size: 40,
@@ -42,7 +42,7 @@ class SendGoodsView extends GetView<SendGoodsController> {
                           )
                         : Image(
                             image: FileImage(ctx.imageGoods!),
-                            fit: BoxFit.cover,
+                            fit: BoxFit.contain,
                           );
                   },
                 ),

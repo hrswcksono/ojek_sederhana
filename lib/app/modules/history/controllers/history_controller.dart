@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../service/db_helper.dart';
@@ -36,5 +37,15 @@ class HistoryController extends GetxController with StateMixin<List<SendGood>> {
     } else {
       change(sendgooddata, status: RxStatus.success());
     }
+  }
+
+  void filterList(DateTime date) {
+    change(
+        sendgooddata.where((element) => element.date == getDate(date)).toList(),
+        status: RxStatus.success());
+  }
+
+  String getDate(DateTime input) {
+    return DateFormat("dd-MM-yyyy").format(input);
   }
 }

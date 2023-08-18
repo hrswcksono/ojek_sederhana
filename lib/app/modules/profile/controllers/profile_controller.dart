@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gojek_sederhana/app/data/models/profile.dart';
+import 'package:gojek_sederhana/app/routes/app_pages.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../service/db_helper.dart';
+import '../../../../utils/helpers/helpers.dart';
 
 class ProfileController extends GetxController with StateMixin<Profile> {
   late TextEditingController namaTf;
@@ -43,13 +46,32 @@ class ProfileController extends GetxController with StateMixin<Profile> {
   }
 
   void editProfile(Profile data) async {
-    data.name = namaTf.text;
-    data.nik = int.parse(nikTf.text);
-    await DBHelper.instance.editProfile(data);
-    namaTf.clear();
-    nikTf.clear();
-    initData();
-    Get.back();
+    if (namaTf.text.isNotEmpty && nikTf.text.isNotEmpty) {
+      data.name = namaTf.text;
+      data.nik = nikTf.text;
+      await DBHelper.instance.editProfile(data);
+      namaTf.clear();
+      nikTf.clear();
+      initData();
+      Get.back();
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.success,
+          title: "Success",
+          text: "Berhasil mengganti profile",
+        ),
+      );
+    } else {
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.success,
+          title: "Error",
+          text: "Tidak boleh kosong",
+        ),
+      );
+    }
   }
 
   void editPassword(Profile data) async {
@@ -59,7 +81,24 @@ class ProfileController extends GetxController with StateMixin<Profile> {
       passTf.clear();
       confPassTf.clear();
       Get.back();
-    } else {}
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.success,
+          title: "Success",
+          text: "Berhasil mengganti password",
+        ),
+      );
+    } else {
+      ArtSweetAlert.show(
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+          type: ArtSweetAlertType.success,
+          title: "Error",
+          text: "Password tidak sama",
+        ),
+      );
+    }
   }
 
   void editImage(Profile data) async {
@@ -96,6 +135,31 @@ class ProfileController extends GetxController with StateMixin<Profile> {
         imageProfile = File(pickImage.path);
       }
       update();
+    }
+  }
+
+  void logout() async {
+    ArtDialogResponse response = await ArtSweetAlert.show(
+        barrierDismissible: false,
+        context: Get.context!,
+        artDialogArgs: ArtDialogArgs(
+            denyButtonText: "Cancel",
+            title: "Are you sure?",
+            text: "You want to logout?",
+            confirmButtonText: "Logout",
+            type: ArtSweetAlertType.warning));
+
+    // ignore: unnecessary_null_comparison
+    if (response == null) {
+      return;
+    }
+
+    if (response.isTapConfirmButton) {
+      Future.delayed(const Duration(seconds: 2), () {
+        removeToken();
+        Get.offAllNamed(Routes.LOGIN);
+        return;
+      });
     }
   }
 }
