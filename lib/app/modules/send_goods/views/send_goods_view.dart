@@ -1,11 +1,7 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gojek_sederhana/app/modules/send_goods/views/mapview_view.dart';
 import 'package:gojek_sederhana/utils/themes/colors.dart';
 import '../controllers/send_goods_controller.dart';
-import 'components/text_field_send_goods.dart';
 
 class SendGoodsView extends GetView<SendGoodsController> {
   const SendGoodsView({Key? key}) : super(key: key);

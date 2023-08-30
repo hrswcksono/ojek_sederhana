@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:art_sweetalert/art_sweetalert.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gojek_sederhana/app/data/models/send_good.dart';
 import 'package:gojek_sederhana/app/modules/send_goods/views/mapview_view.dart';
