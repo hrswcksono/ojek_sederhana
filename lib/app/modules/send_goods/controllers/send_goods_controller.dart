@@ -6,16 +6,18 @@ import 'package:art_sweetalert/art_sweetalert.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gojek_sederhana/app/data/models/send_good.dart';
+import 'package:gojek_sederhana/app/modules/send_goods/views/mapview_view.dart';
 import 'package:gojek_sederhana/service/db_helper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 
 class SendGoodsController extends GetxController {
-  late TextEditingController latDriver;
-  late TextEditingController longDriver;
-  late TextEditingController latOffice;
-  late TextEditingController longOffice;
+  double latDriv = -7.6191793;
+  double longDriv = 112.0118669;
+  double latOfc = -7.6191793;
+  double longOfc = 112.0118669;
+  int state = 0;
 
   var distance = const Distance();
 
@@ -26,13 +28,21 @@ class SendGoodsController extends GetxController {
   File? imageGoods;
   final ImagePicker _picker = ImagePicker();
 
-  @override
-  void onInit() {
-    latDriver = TextEditingController();
-    longDriver = TextEditingController();
-    latOffice = TextEditingController();
-    longOffice = TextEditingController();
-    super.onInit();
+  void toMaps(int stt) {
+    state = stt;
+    update();
+    Get.to(() => const MapviewView());
+  }
+
+  void retPositionMap(_, LatLng direct) {
+    if (state == 0) {
+      latDriv = direct.latitude;
+      longDriv = direct.longitude;
+    } else {
+      latOfc = direct.latitude;
+      longOfc = direct.longitude;
+    }
+    update();
   }
 
   addImage(String label) async {
@@ -67,51 +77,9 @@ class SendGoodsController extends GetxController {
     return double.tryParse(s) != null;
   }
 
-  bool checkIsNumber() {
-    if (isNumeric(latDriver.text) &&
-        isNumeric(longDriver.text) &&
-        isNumeric(latOffice.text) &&
-        isNumeric(longOffice.text)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  void verifDistance() {
-    if (!checkIsNumber()) {
-      ArtSweetAlert.show(
-        context: Get.context!,
-        artDialogArgs: ArtDialogArgs(
-          type: ArtSweetAlertType.danger,
-          title: "Error",
-          text: "Masukkan hanya angka",
-        ),
-      );
-      return;
-    }
-  }
-
   void showDistance() {
-    if (latDriver.text.isEmpty ||
-        longDriver.text.isEmpty ||
-        latOffice.text.isEmpty ||
-        longOffice.text.isEmpty) {
-      ArtSweetAlert.show(
-        context: Get.context!,
-        artDialogArgs: ArtDialogArgs(
-          type: ArtSweetAlertType.danger,
-          title: "Error",
-          text: "Lengkapi longitude latitude",
-        ),
-      );
-      return;
-    }
-    verifDistance();
-    distancets = distance.as(
-        LengthUnit.Kilometer,
-        LatLng(double.parse(latDriver.text), double.parse(longDriver.text)),
-        LatLng(double.parse(latOffice.text), double.parse(longOffice.text)));
+    distancets = distance.as(LengthUnit.Kilometer, LatLng(latDriv, longDriv),
+        LatLng(latOfc, longOfc));
     update();
   }
 
@@ -120,23 +88,6 @@ class SendGoodsController extends GetxController {
   }
 
   void addData() async {
-    if (imageGoods == null ||
-        latDriver.text.isEmpty ||
-        longDriver.text.isEmpty ||
-        latOffice.text.isEmpty ||
-        longOffice.text.isEmpty) {
-      ArtSweetAlert.show(
-        context: Get.context!,
-        artDialogArgs: ArtDialogArgs(
-          type: ArtSweetAlertType.danger,
-          title: "Error",
-          text: "Tidak bolah ada yang kosong",
-        ),
-      );
-      return;
-    }
-
-    verifDistance();
     var imageInput = await imageToBase64(imageGoods!);
 
     var lengthData = 0;
@@ -145,17 +96,15 @@ class SendGoodsController extends GetxController {
       lengthData = value.length;
     });
 
-    distancets = distance.as(
-        LengthUnit.Kilometer,
-        LatLng(double.parse(latDriver.text), double.parse(longDriver.text)),
-        LatLng(double.parse(latOffice.text), double.parse(longOffice.text)));
+    distancets = distance.as(LengthUnit.Kilometer, LatLng(latDriv, longDriv),
+        LatLng(latOfc, longOfc));
 
     var data = SendGood(
       id: lengthData,
-      latDriver: double.parse(latDriver.text),
-      longDriver: double.parse(longDriver.text),
-      latOffice: double.parse(latOffice.text),
-      longOffice: double.parse(longOffice.text),
+      latDriver: latDriv,
+      longDriver: longDriv,
+      latOffice: latOfc,
+      longOffice: longOfc,
       distance: distancets,
       image: imageInput,
       date: getDate(DateTime.now()),

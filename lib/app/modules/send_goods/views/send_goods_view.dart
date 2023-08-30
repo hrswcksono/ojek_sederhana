@@ -1,5 +1,8 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gojek_sederhana/app/modules/send_goods/views/mapview_view.dart';
 import 'package:gojek_sederhana/utils/themes/colors.dart';
 import '../controllers/send_goods_controller.dart';
 import 'components/text_field_send_goods.dart';
@@ -52,27 +55,55 @@ class SendGoodsView extends GetView<SendGoodsController> {
               height: 10,
             ),
             const Text('Titik Driver'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextFieldSendGoods(
-                    title: 'latitude', textEdt: controller.latDriver),
-                TextFieldSendGoods(
-                    title: 'longitude', textEdt: controller.longDriver),
-              ],
+            GetBuilder<SendGoodsController>(
+              init: SendGoodsController(),
+              builder: (ctx) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ctx.latDriv.toString(),
+                    ),
+                    Text(ctx.longDriv.toString()),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: Get.width * 0.35,
+              child: ElevatedButton(
+                  onPressed: () => controller.toMaps(0),
+                  child: const Text('Map')),
             ),
             const SizedBox(
               height: 10,
             ),
             const Text('Titik Kantor'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextFieldSendGoods(
-                    title: 'latitude', textEdt: controller.latOffice),
-                TextFieldSendGoods(
-                    title: 'longitude', textEdt: controller.longOffice),
-              ],
+            GetBuilder<SendGoodsController>(
+              init: SendGoodsController(),
+              builder: (ctx) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ctx.latOfc.toString(),
+                    ),
+                    Text(ctx.longOfc.toString()),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              width: Get.width * 0.35,
+              child: ElevatedButton(
+                  onPressed: () => controller.toMaps(1),
+                  child: const Text('Map')),
             ),
             const SizedBox(
               height: 10,

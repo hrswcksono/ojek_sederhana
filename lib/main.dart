@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app/routes/app_pages.dart';
@@ -8,6 +9,7 @@ import 'utils/themes/colors.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Get.lazyPut(() => StorageService());
+  await dotenv.load();
   await initialConfig();
   runApp(const MyApp());
 }

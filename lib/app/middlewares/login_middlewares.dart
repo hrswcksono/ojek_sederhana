@@ -7,7 +7,7 @@ import '../../utils/helpers/helpers.dart';
 class LoginMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
-    if (readToken().isNotEmpty) {
+    if (readToken() == "login") {
       return const RouteSettings(name: Routes.BASE);
     }
     return null;

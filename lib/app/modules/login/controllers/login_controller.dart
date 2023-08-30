@@ -50,7 +50,7 @@ class LoginController extends GetxController {
     var data = await DBHelper.instance.getUser();
 
     if (data[0]['name'] == nama.text && data[0]['password'] == password.text) {
-      getService.write(GetStorageKey.isLogin, 'masuk');
+      getService.write(GetStorageKey.isLogin, 'login');
       Get.toNamed(Routes.BASE);
     } else {
       ArtSweetAlert.show(
